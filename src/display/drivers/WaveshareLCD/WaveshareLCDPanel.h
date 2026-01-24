@@ -53,6 +53,7 @@ class WaveshareLCDPanel : public Display {
     bool initTouch();
 
     int _brightness;
+    uint8_t _displayRotation;  // Display rotation (0-3), affects touch coordinate transformation
     WaveshareLCDPanelType _panelType;
     WaveshareLCDTouchType _touchType;
 

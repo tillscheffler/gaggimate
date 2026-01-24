@@ -1,30 +1,53 @@
 #include "TCA9554PWR.h"
+#include <Arduino.h>
 
 /*****************************************************  Operation register REG
  * ****************************************************/
+static constexpr uint8_t TCA9554_I2C_RETRIES = 3;
+static constexpr uint8_t TCA9554_I2C_RETRY_DELAY_MS = 5;
+
 uint8_t I2C_Read_EXIO(uint8_t REG) // Read the value of the TCA9554PWR register REG
 {
-    Wire.beginTransmission(TCA9554_ADDRESS);
-    Wire.write(REG);
-    uint8_t result = Wire.endTransmission();
-    if (result != 0) {
-        printf("Data Transfer Failure !!!\r\n");
+    for (uint8_t retry = 0; retry < TCA9554_I2C_RETRIES; retry++) {
+        Wire.beginTransmission(TCA9554_ADDRESS);
+        Wire.write(REG);
+        uint8_t result = Wire.endTransmission();
+        if (result != 0) {
+            if (retry == TCA9554_I2C_RETRIES - 1) {
+                Serial.printf("[TCA9554] I2C transmission error: %d (REG=0x%02X)\n", result, REG);
+            }
+            delay(TCA9554_I2C_RETRY_DELAY_MS);
+            continue;
+        }
+        uint8_t bytesReceived = Wire.requestFrom(TCA9554_ADDRESS, (uint8_t)1);
+        if (bytesReceived != 1) {
+            if (retry == TCA9554_I2C_RETRIES - 1) {
+                Serial.printf("[TCA9554] I2C requestFrom failed: got %d bytes (REG=0x%02X)\n", bytesReceived, REG);
+            }
+            delay(TCA9554_I2C_RETRY_DELAY_MS);
+            continue;
+        }
+        return Wire.read();
     }
-    Wire.requestFrom(TCA9554_ADDRESS, 1);
-    uint8_t bitsStatus = Wire.read();
-    return bitsStatus;
+    return 0;
 }
 uint8_t I2C_Write_EXIO(uint8_t REG, uint8_t Data) // Write Data to the REG register of the TCA9554PWR
 {
-    Wire.beginTransmission(TCA9554_ADDRESS);
-    Wire.write(REG);
-    Wire.write(Data);
-    uint8_t result = Wire.endTransmission();
-    if (result != 0) {
-        printf("Data write failure!!!\r\n");
-        return -1;
+    for (uint8_t retry = 0; retry < TCA9554_I2C_RETRIES; retry++) {
+        Wire.beginTransmission(TCA9554_ADDRESS);
+        Wire.write(REG);
+        Wire.write(Data);
+        uint8_t result = Wire.endTransmission();
+        if (result == 0) {
+            return 0;
+        }
+        if (retry == TCA9554_I2C_RETRIES - 1) {
+            Serial.printf("[TCA9554] I2C write error: %d (REG=0x%02X, Data=0x%02X)\n", result, REG, Data);
+            return -1;
+        }
+        delay(TCA9554_I2C_RETRY_DELAY_MS);
     }
-    return 0;
+    return -1;
 }
 /********************************************************** Set EXIO mode
  * **********************************************************/

@@ -14,7 +14,9 @@ ui.c
 components/ui_comp_hook.c
 ui_helpers.c
 ui_events.cpp
-images/ui_img_logo_png.c
+images/ui_img_francis_png.c
+images/ui_img_objekt_png.c
+images/ui_img_francis_mirrored_png.c
 images/ui_img_untitled_png.c
 images/ui_img_489054950.c
 images/ui_img_340686386.c
@@ -35,10 +37,11 @@ images/ui_img_445946954.c
 images/ui_img_1424216268.c
 images/ui_img_340148213.c
 images/ui_img_332059803.c
-images/ui_img_834125362.c
 images/ui_img_390988422.c
+images/ui_img_834125362.c
 images/ui_img_1594943393.c
 images/ui_img_1464184441.c
+images/ui_img_logo_png.c
 images/ui_img_364513079.c
 images/ui_img_1091371356.c
 images/ui_img_1765671371.c

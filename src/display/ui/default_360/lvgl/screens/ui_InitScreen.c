@@ -5,7 +5,7 @@
 
 #include "../ui.h"
 
-lv_obj_t *ui_InitScreen = NULL;lv_obj_t *ui_InitScreen_Image2 = NULL;lv_obj_t *ui_InitScreen_mainLabel = NULL;
+lv_obj_t *ui_InitScreen = NULL;lv_obj_t *ui_InitScreen_Image1 = NULL;lv_obj_t *ui_InitScreen_Image2 = NULL;lv_obj_t *ui_InitScreen_Image3 = NULL;lv_obj_t *ui_InitScreen_mainLabel = NULL;
 // event funtions
 void ui_event_InitScreen( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -25,24 +25,43 @@ lv_obj_add_event_cb(ui_InitScreen, scr_unloaded_delete_cb, LV_EVENT_SCREEN_UNLOA
 ui_object_set_themeable_style_property(ui_InitScreen, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_BG_COLOR, _ui_theme_color_Dark);
 ui_object_set_themeable_style_property(ui_InitScreen, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_BG_OPA, _ui_theme_alpha_Dark);
 
+ui_InitScreen_Image1 = lv_img_create(ui_InitScreen);
+lv_img_set_src(ui_InitScreen_Image1, &ui_img_francis_png);
+lv_obj_set_width( ui_InitScreen_Image1, LV_SIZE_CONTENT);  /// 380
+lv_obj_set_height( ui_InitScreen_Image1, LV_SIZE_CONTENT);   /// 193
+lv_obj_set_x( ui_InitScreen_Image1, -4 );
+lv_obj_set_y( ui_InitScreen_Image1, -116 );
+lv_obj_set_align( ui_InitScreen_Image1, LV_ALIGN_CENTER );
+lv_obj_add_flag( ui_InitScreen_Image1, LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
+lv_obj_clear_flag( ui_InitScreen_Image1, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+
 ui_InitScreen_Image2 = lv_img_create(ui_InitScreen);
-lv_img_set_src(ui_InitScreen_Image2, &ui_img_logo_png);
-lv_obj_set_width( ui_InitScreen_Image2, LV_SIZE_CONTENT);  /// 1
-lv_obj_set_height( ui_InitScreen_Image2, LV_SIZE_CONTENT);   /// 1
+lv_img_set_src(ui_InitScreen_Image2, &ui_img_objekt_png);
+lv_obj_set_width( ui_InitScreen_Image2, LV_SIZE_CONTENT);  /// 182
+lv_obj_set_height( ui_InitScreen_Image2, LV_SIZE_CONTENT);   /// 200
+lv_obj_set_x( ui_InitScreen_Image2, 0 );
+lv_obj_set_y( ui_InitScreen_Image2, 8 );
 lv_obj_set_align( ui_InitScreen_Image2, LV_ALIGN_CENTER );
 lv_obj_add_flag( ui_InitScreen_Image2, LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
 lv_obj_clear_flag( ui_InitScreen_Image2, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
-lv_img_set_zoom(ui_InitScreen_Image2,160);
-ui_object_set_themeable_style_property(ui_InitScreen_Image2, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_IMG_RECOLOR, _ui_theme_color_NiceWhite);
-ui_object_set_themeable_style_property(ui_InitScreen_Image2, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_IMG_RECOLOR_OPA, _ui_theme_alpha_NiceWhite);
+
+ui_InitScreen_Image3 = lv_img_create(ui_InitScreen);
+lv_img_set_src(ui_InitScreen_Image3, &ui_img_francis_mirrored_png);
+lv_obj_set_width( ui_InitScreen_Image3, LV_SIZE_CONTENT);  /// 380
+lv_obj_set_height( ui_InitScreen_Image3, LV_SIZE_CONTENT);   /// 193
+lv_obj_set_x( ui_InitScreen_Image3, 4 );
+lv_obj_set_y( ui_InitScreen_Image3, 32 );
+lv_obj_set_align( ui_InitScreen_Image3, LV_ALIGN_BOTTOM_MID );
+lv_obj_add_flag( ui_InitScreen_Image3, LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
+lv_obj_clear_flag( ui_InitScreen_Image3, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 ui_InitScreen_mainLabel = lv_label_create(ui_InitScreen);
 lv_obj_set_width( ui_InitScreen_mainLabel, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_InitScreen_mainLabel, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( ui_InitScreen_mainLabel, 0 );
-lv_obj_set_y( ui_InitScreen_mainLabel, 120 );
+lv_obj_set_x( ui_InitScreen_mainLabel, -1 );
+lv_obj_set_y( ui_InitScreen_mainLabel, 165 );
 lv_obj_set_align( ui_InitScreen_mainLabel, LV_ALIGN_CENTER );
-lv_label_set_text(ui_InitScreen_mainLabel,"Starting...");
+lv_label_set_text(ui_InitScreen_mainLabel,"");
 ui_object_set_themeable_style_property(ui_InitScreen_mainLabel, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_TEXT_COLOR, _ui_theme_color_NiceWhite);
 ui_object_set_themeable_style_property(ui_InitScreen_mainLabel, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_TEXT_OPA, _ui_theme_alpha_NiceWhite);
 lv_obj_set_style_text_font(ui_InitScreen_mainLabel, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -57,7 +76,9 @@ void ui_InitScreen_screen_destroy(void)
 
 // NULL screen variables
 ui_InitScreen= NULL;
+ui_InitScreen_Image1= NULL;
 ui_InitScreen_Image2= NULL;
+ui_InitScreen_Image3= NULL;
 ui_InitScreen_mainLabel= NULL;
 
 }

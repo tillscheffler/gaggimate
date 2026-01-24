@@ -646,8 +646,9 @@ void DefaultUI::handleScreenChange() {
             setBrightness(settings.getMainBrightness());
         }
 
+        // Note: Don't call lv_obj_del(current) here - the screen is automatically
+        // deleted by scr_unloaded_delete_cb when LV_EVENT_SCREEN_UNLOADED is fired
         _ui_screen_change(targetScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, targetScreenInit);
-        lv_obj_del(current);
         rerender = true;
     }
 }

@@ -45,7 +45,9 @@ extern "C" {
 extern lv_obj_t *ui____initial_actions0;
 
 // IMAGES AND IMAGE SETS
-LV_IMG_DECLARE( ui_img_logo_png);   // assets/logo.png
+LV_IMG_DECLARE( ui_img_francis_png);   // assets/francis.png
+LV_IMG_DECLARE( ui_img_objekt_png);   // assets/Objekt.png
+LV_IMG_DECLARE( ui_img_francis_mirrored_png);   // assets/francis mirrored.png
 LV_IMG_DECLARE( ui_img_untitled_png);   // assets/Untitled.png
 LV_IMG_DECLARE( ui_img_489054950);   // assets/gauge-fill.png
 LV_IMG_DECLARE( ui_img_340686386);   // assets/indicator-small.png
@@ -66,10 +68,11 @@ LV_IMG_DECLARE( ui_img_445946954);   // assets/play-40x40.png
 LV_IMG_DECLARE( ui_img_1424216268);   // assets/equality-40x40.png
 LV_IMG_DECLARE( ui_img_340148213);   // assets/settings-40x40.png
 LV_IMG_DECLARE( ui_img_332059803);   // assets/dropdown-bar-40x40.png
-LV_IMG_DECLARE( ui_img_834125362);   // assets/minus-small-40x40.png
 LV_IMG_DECLARE( ui_img_390988422);   // assets/plus-small-40x40.png
+LV_IMG_DECLARE( ui_img_834125362);   // assets/minus-small-40x40.png
 LV_IMG_DECLARE( ui_img_1594943393);   // assets/disk-30x30.png
 LV_IMG_DECLARE( ui_img_1464184441);   // assets/floppy-disks-30x30.png
+LV_IMG_DECLARE( ui_img_logo_png);   // assets/logo.png
 LV_IMG_DECLARE( ui_img_364513079);   // assets/wifi-20x20.png
 LV_IMG_DECLARE( ui_img_1091371356);   // assets/bluetooth-alt-20x20.png
 LV_IMG_DECLARE( ui_img_1765671371);   // assets/refresh-20x20.png

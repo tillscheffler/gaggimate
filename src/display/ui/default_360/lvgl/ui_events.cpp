@@ -3,189 +3,161 @@
 // LVGL version: 8.3.11
 // Project name: GaggiMate
 
+#include "../../../main.h"
+#include "../../../plugins/BLEScalePlugin.h"
 #include "ui.h"
+#include <Arduino.h>
 
-void onLoadStarted(lv_event_t * e)
-{
-	// Your code here
+// Flag to track if volumetric hold was triggered
+static bool volumetricHoldTriggered = false;
+
+void onBrewCancel(lv_event_t *e) {
+    controller.deactivate();
+    controller.clear();
 }
 
-void onMenuClick(lv_event_t * e)
-{
-	// Your code here
+void onBrewStart(lv_event_t *e) { controller.activate(); }
+
+void onBrewTempLower(lv_event_t *e) { controller.lowerTemp(); }
+
+void onBrewTempRaise(lv_event_t *e) { controller.raiseTemp(); }
+
+void onBrewTimeLower(lv_event_t *e) { controller.lowerBrewTarget(); }
+
+void onBrewTimeRaise(lv_event_t *e) { controller.raiseBrewTarget(); }
+
+void onSteamTempLower(lv_event_t *e) { controller.lowerTemp(); }
+
+void onSteamTempRaise(lv_event_t *e) { controller.raiseTemp(); }
+
+void onBrewScreen(lv_event_t *e) {
+    controller.getUI()->changeScreen(&ui_BrewScreen, &ui_BrewScreen_screen_init);
+    controller.deactivate();
+    controller.setMode(MODE_BREW);
 }
 
-void onNextProfile(lv_event_t * e)
-{
-	// Your code here
+void onWaterScreen(lv_event_t *e) {
+    controller.getUI()->changeScreen(&ui_SimpleProcessScreen, &ui_SimpleProcessScreen_screen_init);
+    controller.setMode(MODE_WATER);
+    controller.deactivate();
 }
 
-void onPreviousProfile(lv_event_t * e)
-{
-	// Your code here
+void onSteamScreen(lv_event_t *e) {
+    controller.getUI()->changeScreen(&ui_SimpleProcessScreen, &ui_SimpleProcessScreen_screen_init);
+    controller.setMode(MODE_STEAM);
+    controller.deactivate();
 }
 
-void onProfileScreenLoad(lv_event_t * e)
-{
-	// Your code here
+void onWakeup(lv_event_t *e) {
+    controller.getUI()->changeScreen(&ui_BrewScreen, &ui_BrewScreen_screen_init);
+    controller.deactivate();
+    controller.setMode(MODE_BREW);
 }
 
-void onProfileLoad(lv_event_t * e)
-{
-	// Your code here
+void onLoadStarted(lv_event_t *e) { controller.onScreenReady(); }
+
+void onStandby(lv_event_t *e) { controller.activateStandby(); }
+
+void onGrindToggle(lv_event_t *e) { controller.isGrindActive() ? controller.deactivateGrind() : controller.activateGrind(); }
+
+void onGrindTimeLower(lv_event_t *e) { controller.lowerGrindTarget(); }
+
+void onGrindTimeRaise(lv_event_t *e) { controller.raiseGrindTarget(); }
+
+void onMenuClick(lv_event_t *e) {
+    controller.deactivate();
+    controller.setMode(MODE_BREW);
+    controller.getUI()->changeScreen(&ui_MenuScreen, &ui_MenuScreen_screen_init);
 }
 
-void onMenuScreenLoad(lv_event_t * e)
-{
-	// Your code here
+void onGrindScreen(lv_event_t *e) {
+    controller.getUI()->changeScreen(&ui_GrindScreen, &ui_GrindScreen_screen_init);
+    controller.setMode(MODE_GRIND);
 }
 
-void onStandby(lv_event_t * e)
-{
-	// Your code here
+void onVolumetricClick(lv_event_t *e) {
+    // Only execute click if hold wasn't triggered
+    if (!volumetricHoldTriggered) {
+        controller.onTargetToggle();
+        controller.getUI()->markDirty();
+    }
+    // Reset the hold flag for next interaction
+    volumetricHoldTriggered = false;
 }
 
-void onBrewScreen(lv_event_t * e)
-{
-	// Your code here
+void onPreviousProfile(lv_event_t *e) { controller.getUI()->onPreviousProfile(); }
+
+void onNextProfile(lv_event_t *e) { controller.getUI()->onNextProfile(); }
+
+void onProfileLoad(lv_event_t *e) { controller.getUI()->onProfileSelect(); }
+
+void onProfileSelect(lv_event_t *e) { controller.getUI()->onProfileSwitch(); }
+
+void onFlush(lv_event_t *e) { controller.onFlush(); }
+
+void onSimpleProcessToggle(lv_event_t *e) {
+    if (controller.getMode() != MODE_STEAM) {
+        controller.isActive() ? controller.deactivate() : controller.activate();
+    }
 }
 
-void onSteamScreen(lv_event_t * e)
-{
-	// Your code here
+void onProfileScreenLoad(lv_event_t *e) {
+    lv_obj_set_ext_click_area(ui_ProfileScreen_previousProfileBtn, 30);
+    lv_obj_set_ext_click_area(ui_ProfileScreen_nextProfileBtn, 30);
+    lv_obj_set_ext_click_area(ui_ProfileScreen_chooseButton, 30);
+    lv_obj_set_ext_click_area(ui_ProfileScreen_ImgButton1, 20);
 }
 
-void onWaterScreen(lv_event_t * e)
-{
-	// Your code here
+void onMenuScreenLoad(lv_event_t *e) {
+    lv_obj_set_ext_click_area(ui_MenuScreen_btnBrew, 15);
+    lv_obj_set_ext_click_area(ui_MenuScreen_btnSteam, 15);
+    lv_obj_set_ext_click_area(ui_MenuScreen_waterBtn, 15);
+    lv_obj_set_ext_click_area(ui_MenuScreen_grindBtn, 15);
+    lv_obj_set_ext_click_area(ui_MenuScreen_standbyButton, 20);
 }
 
-void onGrindScreen(lv_event_t * e)
-{
-	// Your code here
+void onBrewScreenLoad(lv_event_t *e) {
+    lv_obj_set_ext_click_area(ui_BrewScreen_startButton, 25);
+    lv_obj_set_ext_click_area(ui_BrewScreen_profileSelectBtn, 25);
+    lv_obj_set_ext_click_area(ui_BrewScreen_ImgButton5, 20);
 }
 
-void onBrewScreenLoad(lv_event_t * e)
-{
-	// Your code here
+void onSimpleProcessScreenLoad(lv_event_t *e) {
+    lv_obj_set_ext_click_area(ui_SimpleProcessScreen_downTempButton, 40);
+    lv_obj_set_ext_click_area(ui_SimpleProcessScreen_upTempButton, 40);
+    lv_obj_set_ext_click_area(ui_SimpleProcessScreen_goButton, 25);
+    lv_obj_set_ext_click_area(ui_SimpleProcessScreen_ImgButton6, 20);
 }
 
-void onBrewStart(lv_event_t * e)
-{
-	// Your code here
+void onStatusScreenLoad(lv_event_t *e) {
+    lv_obj_set_ext_click_area(ui_StatusScreen_ImgButton8, 20);
 }
 
-void onFlush(lv_event_t * e)
-{
-	// Your code here
+void onGrindScreenLoad(lv_event_t *e) {
+    lv_obj_set_ext_click_area(ui_GrindScreen_upDurationButton, 40);
+    lv_obj_set_ext_click_area(ui_GrindScreen_downDurationButton, 40);
+    lv_obj_set_ext_click_area(ui_GrindScreen_startButton, 25);
+    lv_obj_set_ext_click_area(ui_GrindScreen_ImgButton2, 20);
 }
 
-void onVolumetricClick(lv_event_t * e)
-{
-	// Your code here
+void onProfileSettings(lv_event_t *e) { controller.getUI()->changeBrewScreenMode(BrewScreenState::Settings); }
+
+void onProfileSave(lv_event_t *e) {
+    controller.onProfileSave();
+    controller.getUI()->changeBrewScreenMode(BrewScreenState::Brew);
 }
 
-void onVolumetricHold(lv_event_t * e)
-{
-	// Your code here
+void onProfileAccept(lv_event_t *e) { controller.getUI()->changeBrewScreenMode(BrewScreenState::Brew); }
+
+void onProfileSaveAsNew(lv_event_t *e) {
+    controller.onProfileSaveAsNew();
+    controller.getUI()->changeBrewScreenMode(BrewScreenState::Brew);
 }
 
-void onProfileSettings(lv_event_t * e)
-{
-	// Your code here
-}
+void onVolumetricHold(lv_event_t *e) {
+    // Set flag to prevent click from firing when button is released
+    volumetricHoldTriggered = true;
 
-void onProfileSelect(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onBrewTempLower(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onBrewTempRaise(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onBrewTimeRaise(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onBrewTimeLower(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onProfileSave(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onProfileAccept(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onProfileSaveAsNew(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onWakeup(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onSimpleProcessScreenLoad(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onSimpleProcessToggle(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onSteamTempLower(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onSteamTempRaise(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onStatusScreenLoad(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onBrewCancel(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onGrindScreenLoad(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onGrindToggle(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onGrindTimeRaise(lv_event_t * e)
-{
-	// Your code here
-}
-
-void onGrindTimeLower(lv_event_t * e)
-{
-	// Your code here
+    controller.getClientController()->tare();
+    BLEScales.tare();
 }

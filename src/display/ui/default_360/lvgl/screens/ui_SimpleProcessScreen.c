@@ -68,16 +68,15 @@ ui_object_set_themeable_style_property(ui_SimpleProcessScreen, LV_PART_MAIN| LV_
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_BG_OPA, _ui_theme_alpha_Dark);
 
 ui_SimpleProcessScreen_dials = ui_dials_create(ui_SimpleProcessScreen);
-lv_obj_set_x( ui_SimpleProcessScreen_dials, 60 );
-lv_obj_set_y( ui_SimpleProcessScreen_dials, 60 );
-lv_obj_set_style_transform_zoom(ui_SimpleProcessScreen_dials, 192, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_x( ui_SimpleProcessScreen_dials, 0 );
+lv_obj_set_y( ui_SimpleProcessScreen_dials, 0 );
 
 ui_SimpleProcessScreen_ImgButton6 = lv_imgbtn_create(ui_SimpleProcessScreen);
 lv_imgbtn_set_src(ui_SimpleProcessScreen_ImgButton6, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_295763949, NULL);
-lv_obj_set_width( ui_SimpleProcessScreen_ImgButton6, 40);
-lv_obj_set_height( ui_SimpleProcessScreen_ImgButton6, 40);
+lv_obj_set_width( ui_SimpleProcessScreen_ImgButton6, 30);
+lv_obj_set_height( ui_SimpleProcessScreen_ImgButton6, 30);
 lv_obj_set_x( ui_SimpleProcessScreen_ImgButton6, 0 );
-lv_obj_set_y( ui_SimpleProcessScreen_ImgButton6, 150 );
+lv_obj_set_y( ui_SimpleProcessScreen_ImgButton6, 158 );
 lv_obj_set_align( ui_SimpleProcessScreen_ImgButton6, LV_ALIGN_CENTER );
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen_ImgButton6, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_IMG_RECOLOR, _ui_theme_color_NiceWhite);
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen_ImgButton6, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_IMG_RECOLOR_OPA, _ui_theme_alpha_NiceWhite);
@@ -85,8 +84,6 @@ ui_object_set_themeable_style_property(ui_SimpleProcessScreen_ImgButton6, LV_PAR
 ui_SimpleProcessScreen_contentPanel5 = lv_obj_create(ui_SimpleProcessScreen);
 lv_obj_set_width( ui_SimpleProcessScreen_contentPanel5, 360);
 lv_obj_set_height( ui_SimpleProcessScreen_contentPanel5, 360);
-lv_obj_set_x( ui_SimpleProcessScreen_contentPanel5, 45 );
-lv_obj_set_y( ui_SimpleProcessScreen_contentPanel5, 45 );
 lv_obj_set_align( ui_SimpleProcessScreen_contentPanel5, LV_ALIGN_CENTER );
 lv_obj_clear_flag( ui_SimpleProcessScreen_contentPanel5, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 lv_obj_set_style_radius(ui_SimpleProcessScreen_contentPanel5, 180, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -95,13 +92,12 @@ lv_obj_set_style_bg_opa(ui_SimpleProcessScreen_contentPanel5, 0, LV_PART_MAIN| L
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen_contentPanel5, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_BORDER_COLOR, _ui_theme_color_NiceWhite);
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen_contentPanel5, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_BORDER_OPA, _ui_theme_alpha_NiceWhite);
 lv_obj_set_style_border_width(ui_SimpleProcessScreen_contentPanel5, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
-lv_obj_set_style_transform_zoom(ui_SimpleProcessScreen_contentPanel5, 192, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_SimpleProcessScreen_mainLabel5 = lv_label_create(ui_SimpleProcessScreen_contentPanel5);
 lv_obj_set_width( ui_SimpleProcessScreen_mainLabel5, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_SimpleProcessScreen_mainLabel5, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_SimpleProcessScreen_mainLabel5, 0 );
-lv_obj_set_y( ui_SimpleProcessScreen_mainLabel5, -140 );
+lv_obj_set_y( ui_SimpleProcessScreen_mainLabel5, -105 );
 lv_obj_set_align( ui_SimpleProcessScreen_mainLabel5, LV_ALIGN_CENTER );
 lv_label_set_text(ui_SimpleProcessScreen_mainLabel5,"Steam");
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen_mainLabel5, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_TEXT_COLOR, _ui_theme_color_NiceWhite);
@@ -110,18 +106,18 @@ lv_obj_set_style_text_font(ui_SimpleProcessScreen_mainLabel5, &lv_font_montserra
 
 ui_SimpleProcessScreen_goButton = lv_imgbtn_create(ui_SimpleProcessScreen_contentPanel5);
 lv_imgbtn_set_src(ui_SimpleProcessScreen_goButton, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_445946954, NULL);
-lv_obj_set_width( ui_SimpleProcessScreen_goButton, 40);
-lv_obj_set_height( ui_SimpleProcessScreen_goButton, 40);
+lv_obj_set_width( ui_SimpleProcessScreen_goButton, 30);
+lv_obj_set_height( ui_SimpleProcessScreen_goButton, 30);
 lv_obj_set_x( ui_SimpleProcessScreen_goButton, 0 );
-lv_obj_set_y( ui_SimpleProcessScreen_goButton, 130 );
+lv_obj_set_y( ui_SimpleProcessScreen_goButton, 98 );
 lv_obj_set_align( ui_SimpleProcessScreen_goButton, LV_ALIGN_CENTER );
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen_goButton, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_IMG_RECOLOR, _ui_theme_color_NiceWhite);
 ui_object_set_themeable_style_property(ui_SimpleProcessScreen_goButton, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_IMG_RECOLOR_OPA, _ui_theme_alpha_NiceWhite);
 
 ui_SimpleProcessScreen_downTempButton = lv_imgbtn_create(ui_SimpleProcessScreen_contentPanel5);
 lv_imgbtn_set_src(ui_SimpleProcessScreen_downTempButton, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_834125362, NULL);
-lv_obj_set_width( ui_SimpleProcessScreen_downTempButton, 40);
-lv_obj_set_height( ui_SimpleProcessScreen_downTempButton, 40);
+lv_obj_set_width( ui_SimpleProcessScreen_downTempButton, 30);
+lv_obj_set_height( ui_SimpleProcessScreen_downTempButton, 30);
 lv_obj_set_x( ui_SimpleProcessScreen_downTempButton, -90 );
 lv_obj_set_y( ui_SimpleProcessScreen_downTempButton, 0 );
 lv_obj_set_align( ui_SimpleProcessScreen_downTempButton, LV_ALIGN_CENTER );
@@ -130,8 +126,8 @@ ui_object_set_themeable_style_property(ui_SimpleProcessScreen_downTempButton, LV
 
 ui_SimpleProcessScreen_upTempButton = lv_imgbtn_create(ui_SimpleProcessScreen_contentPanel5);
 lv_imgbtn_set_src(ui_SimpleProcessScreen_upTempButton, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_390988422, NULL);
-lv_obj_set_width( ui_SimpleProcessScreen_upTempButton, 40);
-lv_obj_set_height( ui_SimpleProcessScreen_upTempButton, 40);
+lv_obj_set_width( ui_SimpleProcessScreen_upTempButton, 30);
+lv_obj_set_height( ui_SimpleProcessScreen_upTempButton, 30);
 lv_obj_set_x( ui_SimpleProcessScreen_upTempButton, 90 );
 lv_obj_set_y( ui_SimpleProcessScreen_upTempButton, 0 );
 lv_obj_set_align( ui_SimpleProcessScreen_upTempButton, LV_ALIGN_CENTER );
@@ -150,8 +146,8 @@ lv_obj_set_style_text_font(ui_SimpleProcessScreen_targetTemp, &lv_font_montserra
 
 ui_SimpleProcessScreen_Image9 = lv_img_create(ui_SimpleProcessScreen_contentPanel5);
 lv_img_set_src(ui_SimpleProcessScreen_Image9, &ui_img_1951499226);
-lv_obj_set_width( ui_SimpleProcessScreen_Image9, 40);
-lv_obj_set_height( ui_SimpleProcessScreen_Image9, 40);
+lv_obj_set_width( ui_SimpleProcessScreen_Image9, 30);
+lv_obj_set_height( ui_SimpleProcessScreen_Image9, 30);
 lv_obj_set_x( ui_SimpleProcessScreen_Image9, 0 );
 lv_obj_set_y( ui_SimpleProcessScreen_Image9, -60 );
 lv_obj_set_align( ui_SimpleProcessScreen_Image9, LV_ALIGN_CENTER );

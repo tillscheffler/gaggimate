@@ -76,6 +76,13 @@ static void touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
         data->point.x = x;
         data->point.y = y;
         data->state = LV_INDEV_STATE_PR;
+
+        // Debug: log touch events to LVGL
+        static uint32_t lastTouchLog = 0;
+        if (millis() - lastTouchLog > 200) {
+            Serial.printf("LVGL Touch: x=%d y=%d\n", x, y);
+            lastTouchLog = millis();
+        }
         return;
     }
     data->state = LV_INDEV_STATE_REL;

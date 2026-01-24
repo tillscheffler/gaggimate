@@ -30,8 +30,8 @@ static void cleanupDisplayPtrs(void*& bus, void*& gfx) {
 
 
 WaveshareLCDPanel::WaveshareLCDPanel()
-    : _brightness(0), _panelType(WS_LCD_UNKNOWN), _touchType(WS_LCD_TOUCH_UNKNOWN),
-      _bus(nullptr), _gfx(nullptr), _touchDrv(nullptr), 
+    : _brightness(0), _displayRotation(2), _panelType(WS_LCD_UNKNOWN), _touchType(WS_LCD_TOUCH_UNKNOWN),
+      _bus(nullptr), _gfx(nullptr), _touchDrv(nullptr),
       _initialized(false), _sdCardInstalled(false),
       _panel_handle(nullptr), _io_handle(nullptr) {
 }
@@ -88,10 +88,10 @@ bool WaveshareLCDPanel::begin() {
     _panelType = WS_LCD_1_85_INCHES;
     _initialized = true;
 
-    // Fade in backlight (50% = 512 for 10-bit)
-    for (int i = 0; i <= 512; i += 32) {
+    // Fade in backlight to full brightness (1024 for 10-bit)
+    for (int i = 0; i <= 1024; i += 64) {
         setBrightness(i);
-        delay(20);
+        delay(15);
     }
 
     Serial.println(F("WaveshareLCDPanel: Initialization complete"));
@@ -103,7 +103,7 @@ bool WaveshareLCDPanel::initI2C() {
         return false;
     }
     Wire.setClock(400000);
-    delay(10);
+    delay(50);  // Allow I2C bus to fully stabilize
     return true;
 }
 
@@ -150,7 +150,7 @@ bool WaveshareLCDPanel::initDisplay() {
     WS_ST77916 *gfx = new WS_ST77916(
         bus,
         -1,                    // RST pin (-1 because we use GPIO expander)
-        0,                     // Rotation
+        _displayRotation,      // Rotation (0-3, default 2 for correct physical orientation)
         false,                 // IPS
         WS_LCD_185_WIDTH,      // Width (360)
         WS_LCD_185_HEIGHT      // Height (360)
@@ -194,6 +194,8 @@ bool WaveshareLCDPanel::initTouch() {
         _touchDrv = touch;
         _touchType = WS_LCD_TOUCH_CST816;
         touch->setMaxCoordinates(WS_LCD_185_WIDTH, WS_LCD_185_HEIGHT);
+        // Don't mirror here - we handle coordinate transformation in getPoint()
+        touch->setMirrorXY(false, false);
         Serial.printf("WaveshareLCDPanel: Touch initialized (CST816 @ 0x%02X)\n", WS_LCD_185_CST816_ADDR);
         return true;
     }
@@ -225,7 +227,7 @@ void WaveshareLCDPanel::wakeup() {
     if (gfx) {
         gfx->displayOn();
     }
-    setBrightness(512);
+    setBrightness(1024);  // Full brightness
 }
 
 uint16_t WaveshareLCDPanel::width() {
@@ -237,18 +239,61 @@ uint16_t WaveshareLCDPanel::height() {
 }
 
 uint8_t WaveshareLCDPanel::getPoint(int16_t *x, int16_t *y, uint8_t get_point) {
-    if (!_touchDrv || !_touchDrv->isPressed()) {
+    if (!_touchDrv) {
         return 0;
     }
-    
-    return _touchDrv->getPoint(x, y, get_point);
+
+    // Get touch point
+    int16_t tx, ty;
+    uint8_t result = _touchDrv->getPoint(&tx, &ty, get_point);
+
+    if (result == 0) {
+        return 0;
+    }
+
+    // Transform touch coordinates based on display rotation
+    // Touch panel is physically fixed, so we need to transform based on how display is rotated
+    switch (_displayRotation) {
+        case 0:  // No rotation - touch panel native orientation
+            *x = tx;
+            *y = ty;
+            break;
+        case 1:  // 90° clockwise
+            *x = ty;
+            *y = WS_LCD_185_HEIGHT - 1 - tx;
+            break;
+        case 2:  // 180° - invert both axes
+            *x = WS_LCD_185_WIDTH - 1 - tx;
+            *y = WS_LCD_185_HEIGHT - 1 - ty;
+            break;
+        case 3:  // 270° clockwise (90° counter-clockwise)
+            *x = WS_LCD_185_WIDTH - 1 - ty;
+            *y = tx;
+            break;
+        default:
+            *x = tx;
+            *y = ty;
+            break;
+    }
+
+    // Clamp to valid range
+    if (*x < 0) *x = 0;
+    if (*y < 0) *y = 0;
+    if (*x >= WS_LCD_185_WIDTH) *x = WS_LCD_185_WIDTH - 1;
+    if (*y >= WS_LCD_185_HEIGHT) *y = WS_LCD_185_HEIGHT - 1;
+
+    return result;
 }
 
 void WaveshareLCDPanel::pushColors(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t *data) {
     WS_ST77916 *gfx = (WS_ST77916*)_gfx;
     if (!gfx) return;
-    
-    gfx->draw16bitRGBBitmap(x, y, data, w, h);
+
+    // LV_Helper passes x1, y1, x2+1, y2+1 (end coordinates)
+    // but draw16bitRGBBitmap expects x, y, width, height
+    uint16_t width = w - x;
+    uint16_t height = h - y;
+    gfx->draw16bitRGBBitmap(x, y, data, width, height);
 }
 
 bool WaveshareLCDPanel::installSD() {

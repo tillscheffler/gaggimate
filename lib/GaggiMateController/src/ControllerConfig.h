@@ -28,6 +28,9 @@ struct ControllerConfig {
 
     uint8_t pressureScl = 0;
     uint8_t pressureSda = 0;
+    float pressureMaxBar = 16.0f;      // Max pressure in bar (e.g., 12 or 16)
+    float pressureVoltageMin = 0.5f;   // Sensor output voltage at 0 bar
+    float pressureVoltageMax = 4.5f;   // Sensor output voltage at max pressure
 
     uint8_t maxSckPin;
     uint8_t maxCsPin;
@@ -126,6 +129,9 @@ const ControllerConfig GM_PRO_REV_1x = {.name = "GaggiMate Pro Rev 1.x",
                                         .altOn = 1,
                                         .pressureScl = 41,
                                         .pressureSda = 42,
+                                        .pressureMaxBar = 12.0f,
+                                        .pressureVoltageMin = 0.4f,
+                                        .pressureVoltageMax = 2.4f,
                                         .maxSckPin = 6,
                                         .maxCsPin = 7,
                                         .maxMisoPin = 4,

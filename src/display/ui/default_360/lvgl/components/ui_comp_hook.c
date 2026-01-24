@@ -7,4 +7,5 @@
 
 void ui_comp_dials_create_hook( lv_obj_t * comp)
 {
+    // Empty hook - no modifications
 }

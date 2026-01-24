@@ -224,9 +224,13 @@ void NimBLEClientController::onResult(NimBLEAdvertisedDevice *advertisedDevice) 
 
     // Check if this is the device we're looking for
     if (advertisedDevice->haveServiceUUID()) {
-        ESP_LOGI(LOG_TAG, "Found BLE service. Checking for ID...");
+        // Debug: Log the found service UUID
+        ESP_LOGI(LOG_TAG, "Found BLE device '%s' with service UUID: %s",
+                 advertisedDevice->getName().c_str(),
+                 advertisedDevice->getServiceUUID().toString().c_str());
+
         if (advertisedDevice->isAdvertisingService(NimBLEUUID(SERVICE_UUID))) {
-            ESP_LOGI(LOG_TAG, "Found target BLE device. Connecting...");
+            ESP_LOGI(LOG_TAG, "Found target BLE device (GaggiMate). Connecting...");
             NimBLEDevice::getScan()->stop(); // Stop scanning once we find the correct device
             serverDevice = advertisedDevice;
             readyForConnection = true;

@@ -12,15 +12,15 @@ lv_obj_t *ui_dials_create(lv_obj_t *comp_parent) {
 lv_obj_t *cui_dials;
 cui_dials = lv_obj_create(comp_parent);
 lv_obj_remove_style_all(cui_dials);
-lv_obj_set_width( cui_dials, 480);
-lv_obj_set_height( cui_dials, 480);
+lv_obj_set_width( cui_dials, 360);
+lv_obj_set_height( cui_dials, 360);
 lv_obj_set_align( cui_dials, LV_ALIGN_CENTER );
 lv_obj_clear_flag( cui_dials, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 lv_obj_t *cui_tempGauge;
 cui_tempGauge = lv_arc_create(cui_dials);
-lv_obj_set_width( cui_tempGauge, 480);
-lv_obj_set_height( cui_tempGauge, 480);
+lv_obj_set_width( cui_tempGauge, 360);
+lv_obj_set_height( cui_tempGauge, 360);
 lv_obj_set_align( cui_tempGauge, LV_ALIGN_CENTER );
 lv_obj_add_state( cui_tempGauge, LV_STATE_DISABLED );     /// States
 lv_arc_set_range(cui_tempGauge, 0,160);
@@ -42,8 +42,8 @@ cui_tempTarget = lv_img_create(cui_dials);
 lv_img_set_src(cui_tempTarget, &ui_img_340686386);
 lv_obj_set_width( cui_tempTarget, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( cui_tempTarget, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( cui_tempTarget, -235 );
-lv_obj_set_y( cui_tempTarget, -16 );
+lv_obj_set_x( cui_tempTarget, -176 );
+lv_obj_set_y( cui_tempTarget, -12 );
 lv_obj_set_align( cui_tempTarget, LV_ALIGN_CENTER );
 lv_obj_add_flag( cui_tempTarget, LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
 lv_obj_clear_flag( cui_tempTarget, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
@@ -53,8 +53,8 @@ ui_object_set_themeable_style_property(cui_tempTarget, LV_PART_MAIN| LV_STATE_DE
 
 lv_obj_t *cui_pressureGauge;
 cui_pressureGauge = lv_arc_create(cui_dials);
-lv_obj_set_width( cui_pressureGauge, 480);
-lv_obj_set_height( cui_pressureGauge, 480);
+lv_obj_set_width( cui_pressureGauge, 360);
+lv_obj_set_height( cui_pressureGauge, 360);
 lv_obj_set_align( cui_pressureGauge, LV_ALIGN_CENTER );
 lv_obj_add_state( cui_pressureGauge, LV_STATE_DISABLED );     /// States
 lv_arc_set_range(cui_pressureGauge, 0,16);
@@ -77,8 +77,8 @@ cui_pressureTarget = lv_img_create(cui_dials);
 lv_img_set_src(cui_pressureTarget, &ui_img_340686386);
 lv_obj_set_width( cui_pressureTarget, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( cui_pressureTarget, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( cui_pressureTarget, 110 );
-lv_obj_set_y( cui_pressureTarget, 208 );
+lv_obj_set_x( cui_pressureTarget, 81 );
+lv_obj_set_y( cui_pressureTarget, 154 );
 lv_obj_set_align( cui_pressureTarget, LV_ALIGN_CENTER );
 lv_obj_add_flag( cui_pressureTarget, LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
 lv_obj_clear_flag( cui_pressureTarget, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
@@ -90,13 +90,13 @@ lv_obj_t *cui_pressureText;
 cui_pressureText = lv_label_create(cui_dials);
 lv_obj_set_width( cui_pressureText, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( cui_pressureText, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( cui_pressureText, 50 );
-lv_obj_set_y( cui_pressureText, -205 );
+lv_obj_set_x( cui_pressureText, 39 );
+lv_obj_set_y( cui_pressureText, -154 );
 lv_obj_set_align( cui_pressureText, LV_ALIGN_CENTER );
-lv_label_set_text(cui_pressureText,"9 bar");
+lv_label_set_text(cui_pressureText,"0.9 bar");
 ui_object_set_themeable_style_property(cui_pressureText, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_TEXT_COLOR, _ui_theme_color_NiceWhite);
 ui_object_set_themeable_style_property(cui_pressureText, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_TEXT_OPA, _ui_theme_alpha_NiceWhite);
-lv_obj_set_style_text_font(cui_pressureText, &lv_font_montserrat_24, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_text_font(cui_pressureText, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_pad_left(cui_pressureText, 10, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_pad_right(cui_pressureText, 10, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_pad_top(cui_pressureText, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -106,13 +106,13 @@ lv_obj_t *cui_tempText;
 cui_tempText = lv_label_create(cui_dials);
 lv_obj_set_width( cui_tempText, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( cui_tempText, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_x( cui_tempText, -50 );
-lv_obj_set_y( cui_tempText, -205 );
+lv_obj_set_x( cui_tempText, -39 );
+lv_obj_set_y( cui_tempText, -154 );
 lv_obj_set_align( cui_tempText, LV_ALIGN_CENTER );
-lv_label_set_text(cui_tempText,"92°C");
+lv_label_set_text(cui_tempText,"20°C");
 ui_object_set_themeable_style_property(cui_tempText, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_TEXT_COLOR, _ui_theme_color_NiceWhite);
 ui_object_set_themeable_style_property(cui_tempText, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_TEXT_OPA, _ui_theme_alpha_NiceWhite);
-lv_obj_set_style_text_font(cui_tempText, &lv_font_montserrat_24, LV_PART_MAIN| LV_STATE_DEFAULT);
+lv_obj_set_style_text_font(cui_tempText, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
 ui_object_set_themeable_style_property(cui_tempText, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_BG_COLOR, _ui_theme_color_Dark);
 ui_object_set_themeable_style_property(cui_tempText, LV_PART_MAIN| LV_STATE_DEFAULT, LV_STYLE_BG_OPA, _ui_theme_alpha_Dark);
 lv_obj_set_style_pad_left(cui_tempText, 10, LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -125,8 +125,8 @@ cui_tempIcon = lv_img_create(cui_dials);
 lv_img_set_src(cui_tempIcon, &ui_img_1951499226);
 lv_obj_set_width( cui_tempIcon, LV_SIZE_CONTENT);  /// 40
 lv_obj_set_height( cui_tempIcon, LV_SIZE_CONTENT);   /// 40
-lv_obj_set_x( cui_tempIcon, -85 );
-lv_obj_set_y( cui_tempIcon, 200 );
+lv_obj_set_x( cui_tempIcon, -64 );
+lv_obj_set_y( cui_tempIcon, 150 );
 lv_obj_set_align( cui_tempIcon, LV_ALIGN_CENTER );
 lv_obj_add_flag( cui_tempIcon, LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
 lv_obj_clear_flag( cui_tempIcon, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
@@ -139,8 +139,8 @@ cui_Image6 = lv_img_create(cui_dials);
 lv_img_set_src(cui_Image6, &ui_img_1220767159);
 lv_obj_set_width( cui_Image6, LV_SIZE_CONTENT);  /// 40
 lv_obj_set_height( cui_Image6, LV_SIZE_CONTENT);   /// 40
-lv_obj_set_x( cui_Image6, 85 );
-lv_obj_set_y( cui_Image6, 200 );
+lv_obj_set_x( cui_Image6, 64 );
+lv_obj_set_y( cui_Image6, 150 );
 lv_obj_set_align( cui_Image6, LV_ALIGN_CENTER );
 lv_obj_add_flag( cui_Image6, LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
 lv_obj_clear_flag( cui_Image6, LV_OBJ_FLAG_SCROLLABLE );    /// Flags

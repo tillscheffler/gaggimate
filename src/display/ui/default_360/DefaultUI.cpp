@@ -293,6 +293,7 @@ void DefaultUI::onNextProfile() {
         currentProfileId = favoritedProfiles.at(currentProfileIdx);
         profileLoaded = 0;
         currentProfileChoice = Profile{};
+        rerender = true;
     }
 }
 
@@ -305,6 +306,7 @@ void DefaultUI::onPreviousProfile() {
         currentProfileId = favoritedProfiles.at(currentProfileIdx);
         profileLoaded = 0;
         currentProfileChoice = Profile{};
+        rerender = true;
     }
 }
 
@@ -585,6 +587,11 @@ void DefaultUI::setupReactive() {
                 _ui_flag_modify(ui_ProfileScreen_loadingSpinner, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
             }
 
+            // Hide navigation buttons if only one profile exists
+            bool hasMultipleProfiles = favoritedProfiles.size() > 1;
+            _ui_flag_modify(ui_ProfileScreen_previousProfileBtn, LV_OBJ_FLAG_HIDDEN, hasMultipleProfiles ? _UI_MODIFY_FLAG_REMOVE : _UI_MODIFY_FLAG_ADD);
+            _ui_flag_modify(ui_ProfileScreen_nextProfileBtn, LV_OBJ_FLAG_HIDDEN, hasMultipleProfiles ? _UI_MODIFY_FLAG_REMOVE : _UI_MODIFY_FLAG_ADD);
+
             ui_object_set_themeable_style_property(ui_ProfileScreen_previousProfileBtn, LV_PART_MAIN | LV_STATE_DEFAULT,
                                                    LV_STYLE_IMG_RECOLOR,
                                                    currentProfileIdx > 0 ? _ui_theme_color_NiceWhite : _ui_theme_color_SemiDark);
@@ -596,7 +603,7 @@ void DefaultUI::setupReactive() {
                 !favoritedProfiles.empty() && currentProfileIdx < favoritedProfiles.size() - 1 ? _ui_theme_color_NiceWhite : _ui_theme_color_SemiDark);
             ui_object_set_themeable_style_property(
                 ui_ProfileScreen_nextProfileBtn, LV_PART_MAIN | LV_STATE_DEFAULT, LV_STYLE_IMG_RECOLOR_OPA,
-                !favoritedProfiles.empty() && currentProfileIdx < favoritedProfiles.size() - 1 ? _ui_theme_color_NiceWhite : _ui_theme_color_SemiDark);
+                !favoritedProfiles.empty() && currentProfileIdx < favoritedProfiles.size() - 1 ? _ui_theme_alpha_NiceWhite : _ui_theme_alpha_SemiDark);
         },
         &currentProfileId, &profileLoaded);
 
@@ -657,8 +664,9 @@ void DefaultUI::handleScreenChange() {
             setBrightness(settings.getMainBrightness());
         }
 
+        // Note: Don't call lv_obj_del(current) here - the screen is automatically
+        // deleted by scr_unloaded_delete_cb when LV_EVENT_SCREEN_UNLOADED is fired
         _ui_screen_change(targetScreen, LV_SCR_LOAD_ANIM_NONE, 0, 0, targetScreenInit);
-        lv_obj_del(current);
         rerender = true;
     }
 }
@@ -831,8 +839,9 @@ void DefaultUI::adjustDials(lv_obj_t *dials) {
     _ui_flag_modify(pressureGauge, LV_OBJ_FLAG_HIDDEN, pressureAvailable);
     _ui_flag_modify(pressureText, LV_OBJ_FLAG_HIDDEN, pressureAvailable);
     _ui_flag_modify(pressureSymbol, LV_OBJ_FLAG_HIDDEN, pressureAvailable);
-    lv_obj_set_x(tempText, pressureAvailable ? -50 : 0);
-    lv_obj_set_y(tempText, pressureAvailable ? -205 : -180);
+    // Scaled positions for 360x360 display (original values were for 466x466)
+    lv_obj_set_x(tempText, pressureAvailable ? -37 : 0);
+    lv_obj_set_y(tempText, pressureAvailable ? -154 : -140);
     lv_arc_set_bg_angles(tempGauge, 118, pressureAvailable ? 242 : 62);
     lv_arc_set_range(pressureGauge, 0, pressureScaling * 10);
 }
@@ -863,8 +872,10 @@ void DefaultUI::adjustTarget(lv_obj_t *obj, double percentage, double start, dou
     double angle = start + range - range * percentage;
 
     lv_img_set_angle(obj, angle * -10);
-    int x = static_cast<int>(std::cos(angle * M_PI / 180.0f) * 235.0);
-    int y = static_cast<int>(std::sin(angle * M_PI / 180.0f) * -235.0);
+    // Radius scaled for 360x360 display (original 235 was for 466x466)
+    constexpr double radius = 176.0;
+    int x = static_cast<int>(std::cos(angle * M_PI / 180.0f) * radius);
+    int y = static_cast<int>(std::sin(angle * M_PI / 180.0f) * -radius);
     lv_obj_set_pos(obj, x, y);
 }
 
