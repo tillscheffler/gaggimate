@@ -30,7 +30,7 @@ static void cleanupDisplayPtrs(void*& bus, void*& gfx) {
 
 
 WaveshareLCDPanel::WaveshareLCDPanel()
-    : _brightness(0), _displayRotation(2), _panelType(WS_LCD_UNKNOWN), _touchType(WS_LCD_TOUCH_UNKNOWN),
+    : _brightness(0), _displayRotation(0), _panelType(WS_LCD_UNKNOWN), _touchType(WS_LCD_TOUCH_UNKNOWN),
       _bus(nullptr), _gfx(nullptr), _touchDrv(nullptr),
       _initialized(false), _sdCardInstalled(false),
       _panel_handle(nullptr), _io_handle(nullptr) {
