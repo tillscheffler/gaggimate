@@ -54,8 +54,9 @@ void WaveshareLCDDriver::init() {
     }
     
     beginLvglHelper(panel);
-    panel.setBrightness(16);  // Maximum brightness (1-16 scale)
-    
+    // Backlight is left off here; DefaultUI::setupPanel() turns it on once
+    // ui_init() has actually drawn the first frame, avoiding a lit black screen.
+
     ESP_LOGI("WaveshareLCDDriver", "Initialization complete (360x360)");
 }
 

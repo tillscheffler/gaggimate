@@ -23,10 +23,14 @@
 #include <display/plugins/WebUIPlugin.h>
 #include <display/plugins/mDNSPlugin.h>
 #ifndef GAGGIMATE_HEADLESS
+#ifdef GAGGIMATE_WAVESHARE_LCD_185
+#include <display/drivers/WaveshareLCDDriver.h>
+#else
 #include <display/drivers/AmoledDisplayDriver.h>
 #include <display/drivers/LilyGoDriver.h>
 #include <display/drivers/WaveshareDriver.h>
 #include <display/drivers/WaveshareLCDDriver.h>
+#endif
 #endif
 
 const String LOG_TAG = F("Controller");
@@ -114,6 +118,11 @@ void Controller::connect() {
 
 #ifndef GAGGIMATE_HEADLESS
 void Controller::setupPanel() {
+#ifdef GAGGIMATE_WAVESHARE_LCD_185
+    if (WaveshareLCDDriver::getInstance()->isCompatible()) {
+        driver = WaveshareLCDDriver::getInstance();
+    } else {
+#else
     if (AmoledDisplayDriver::getInstance()->isCompatible()) {
         driver = AmoledDisplayDriver::getInstance();
     } else if (LilyGoDriver::getInstance()->isCompatible()) {
@@ -123,6 +132,7 @@ void Controller::setupPanel() {
     } else if (WaveshareDriver::getInstance()->isCompatible()) {
         driver = WaveshareDriver::getInstance();
     } else {
+#endif
         Serial.println("No compatible display driver found");
         delay(10000);
         ESP.restart();

@@ -88,11 +88,9 @@ bool WaveshareLCDPanel::begin() {
     _panelType = WS_LCD_1_85_INCHES;
     _initialized = true;
 
-    // Fade in backlight to full brightness (1-16 scale)
-    for (int i = 0; i <= 16; i++) {
-        setBrightness(i);
-        delay(15);
-    }
+    // Keep backlight off until the UI has actually drawn its first frame
+    // (DefaultUI::setupPanel sets it once ui_init() has run), otherwise the
+    // user sees a fully-lit black screen during the rest of boot setup.
 
     Serial.println(F("WaveshareLCDPanel: Initialization complete"));
     return true;

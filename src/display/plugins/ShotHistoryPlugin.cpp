@@ -76,7 +76,8 @@ void ShotHistoryPlugin::setup(Controller *c, PluginManager *pm) {
         fs = &SD_MMC;
         ESP_LOGI("ShotHistoryPlugin", "Logging shot history to SD card");
     }
-    rebuildIndex();
+    // Rebuilt in the background task below instead of here, so it doesn't
+    // block boot (and the UI showing its first frame) on SPIFFS file I/O.
     pm->on("controller:brew:start", [this](Event const &) { startRecording(); });
     pm->on("controller:brew:end", [this](Event const &) { endRecording(); });
     pm->on("controller:brew:clear", [this](Event const &) { endExtendedRecording(); });
@@ -503,6 +504,7 @@ void ShotHistoryPlugin::loadNotes(const String &id, JsonDocument &notes) {
 
 void ShotHistoryPlugin::loopTask(void *arg) {
     auto *plugin = static_cast<ShotHistoryPlugin *>(arg);
+    plugin->rebuildIndex();
     while (true) {
         plugin->record();
         // Use canonical interval from shot log format to avoid divergence.
@@ -665,18 +667,14 @@ void ShotHistoryPlugin::markIndexDeleted(uint32_t shotId) {
 void ShotHistoryPlugin::rebuildIndex() {
     ESP_LOGI("ShotHistoryPlugin", "Starting index rebuild...");
 
-    // Delete existing index
+    // Delete existing index; it is rewritten in one pass below once all
+    // entries are collected, rather than reopening/rescanning it per shot.
     fs->remove("/h/index.bin");
-
-    // Create new empty index
-    if (!ensureIndexExists()) {
-        ESP_LOGE("ShotHistoryPlugin", "Failed to create index during rebuild");
-        return;
-    }
 
     File directory = fs->open("/h");
     if (!directory || !directory.isDirectory()) {
         ESP_LOGW("ShotHistoryPlugin", "No history directory found");
+        ensureIndexExists();
         return;
     }
 
@@ -696,6 +694,10 @@ void ShotHistoryPlugin::rebuildIndex() {
     std::sort(slogFiles.begin(), slogFiles.end());
 
     ESP_LOGI("ShotHistoryPlugin", "Rebuilding index from %d shot files", slogFiles.size());
+
+    std::vector<ShotIndexEntry> entries;
+    entries.reserve(slogFiles.size());
+    uint32_t nextId = controller->getSettings().getHistoryIndex();
 
     for (const String &fileName : slogFiles) {
         File shotFile = fs->open("/h/" + fileName, "r");
@@ -761,9 +763,29 @@ void ShotHistoryPlugin::rebuildIndex() {
 
         shotFile.close();
 
-        // Append to index
-        appendToIndex(entry);
+        entries.push_back(entry);
+        nextId = shotId + 1;
     }
+
+    // Write the whole index in a single pass instead of reopening/rescanning
+    // index.bin once per shot file (which dominated rebuild time on SPIFFS).
+    File indexFile = fs->open("/h/index.bin", FILE_WRITE);
+    if (!indexFile) {
+        ESP_LOGE("ShotHistoryPlugin", "Failed to create index during rebuild");
+        return;
+    }
+
+    ShotIndexHeader header{};
+    header.magic = SHOT_INDEX_MAGIC;
+    header.version = SHOT_INDEX_VERSION;
+    header.entrySize = SHOT_INDEX_ENTRY_SIZE;
+    header.entryCount = entries.size();
+    header.nextId = nextId;
+    indexFile.write(reinterpret_cast<const uint8_t *>(&header), sizeof(header));
+    for (const ShotIndexEntry &entry : entries) {
+        indexFile.write(reinterpret_cast<const uint8_t *>(&entry), sizeof(entry));
+    }
+    indexFile.close();
 
     ESP_LOGI("ShotHistoryPlugin", "Index rebuild completed");
 }
