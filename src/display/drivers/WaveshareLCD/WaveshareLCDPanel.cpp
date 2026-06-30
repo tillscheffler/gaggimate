@@ -88,8 +88,8 @@ bool WaveshareLCDPanel::begin() {
     _panelType = WS_LCD_1_85_INCHES;
     _initialized = true;
 
-    // Fade in backlight to full brightness (1024 for 10-bit)
-    for (int i = 0; i <= 1024; i += 64) {
+    // Fade in backlight to full brightness (1-16 scale)
+    for (int i = 0; i <= 16; i++) {
         setBrightness(i);
         delay(15);
     }
@@ -206,7 +206,9 @@ bool WaveshareLCDPanel::initTouch() {
 }
 
 void WaveshareLCDPanel::setBrightness(int brightness) {
-    _brightness = constrain(brightness, 0, WS_LCD_185_BACKLIGHT_MAX);
+    // Settings use a 1-16 scale app-wide; map it onto the 10-bit PWM duty range.
+    int level = constrain(brightness, 0, 16);
+    _brightness = level * (WS_LCD_185_BACKLIGHT_MAX / 16);
     ledcWrite(WS_LCD_185_PWM_CHANNEL, _brightness);
 }
 
@@ -227,7 +229,7 @@ void WaveshareLCDPanel::wakeup() {
     if (gfx) {
         gfx->displayOn();
     }
-    setBrightness(1024);  // Full brightness
+    setBrightness(16);  // Full brightness
 }
 
 uint16_t WaveshareLCDPanel::width() {

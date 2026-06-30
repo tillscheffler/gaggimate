@@ -54,7 +54,7 @@ void WaveshareLCDDriver::init() {
     }
     
     beginLvglHelper(panel);
-    panel.setBrightness(1024);  // Maximum brightness (10-bit PWM: 0-1024)
+    panel.setBrightness(16);  // Maximum brightness (1-16 scale)
     
     ESP_LOGI("WaveshareLCDDriver", "Initialization complete (360x360)");
 }
