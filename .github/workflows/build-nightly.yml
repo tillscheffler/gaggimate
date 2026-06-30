@@ -60,6 +60,13 @@ jobs:
           mv .pio/build/display-headless/firmware.bin out/display-headless-firmware.bin
           mv .pio/build/display-headless/partitions.bin out/display-headless-partitions.bin
           mv .pio/build/display-headless/bootloader.bin out/display-headless-bootloader.bin
+      - name: Build Waveshare 1.85" LCD
+        run: |
+          export PLATFORMIO_BUILD_FLAGS="'-DNIGHTLY_BUILD'"
+          pio run -e display-ws-lcd-185
+          mv .pio/build/display-ws-lcd-185/firmware.bin out/display-ws-lcd-185-firmware.bin
+          mv .pio/build/display-ws-lcd-185/partitions.bin out/display-ws-lcd-185-partitions.bin
+          mv .pio/build/display-ws-lcd-185/bootloader.bin out/display-ws-lcd-185-bootloader.bin
       - name: Build display FS
         run: |
           pio run -t buildfs -e display
